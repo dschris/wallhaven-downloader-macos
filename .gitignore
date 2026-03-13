@@ -1,0 +1,18 @@
+# Swift / Xcode
+.build/
+.swiftpm/
+*.xcworkspace
+DerivedData/
+xcuserdata/
+
+# Build artifacts
+build/
+dist/
+Output/
+*.app
+
+# macOS
+.DS_Store
+
+# Package.resolved is typically committed, but ignored here if preferred
+# Package.resolved
