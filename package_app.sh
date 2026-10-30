@@ -40,7 +40,7 @@ cat > "$OUTPUT_DIR/$APP_NAME.app/Contents/Info.plist" <<EOF
     <key>LSMinimumSystemVersion</key>
     <string>14.0</string>
     <key>LSUIElement</key>
-    <false/>
+    <true/>
 </dict>
 </plist>
 EOF
@@ -48,8 +48,11 @@ EOF
 echo "📥 Copying binary..."
 cp "$BUILD_DIR/$APP_NAME" "$OUTPUT_DIR/$APP_NAME.app/Contents/MacOS/"
 
-# If there are resources, they should be copied here.
-# For now we create a generic icon or assume none.
+# Copy app icon
+if [ -f "Sources/Resources/AppIcon.icns" ]; then
+    cp "Sources/Resources/AppIcon.icns" "$OUTPUT_DIR/$APP_NAME.app/Contents/Resources/"
+    echo "🎨 App icon copied."
+fi
 
 echo "🔒 Ad-hoc signing..."
 codesign --force --deep --sign - "$OUTPUT_DIR/$APP_NAME.app"

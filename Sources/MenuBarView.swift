@@ -1,8 +1,6 @@
 import SwiftUI
 
 struct MenuBarView: View {
-    @Environment(\.openWindow) var openWindow
-    
     var body: some View {
         Button("Next Wallpaper") {
             Task {
@@ -14,7 +12,7 @@ struct MenuBarView: View {
         Divider()
         
         Button("Open Dashboard") {
-            openWindow(id: "main") // Needs handling in App setup to identify window
+            AppDelegate.shared?.showDashboard()
         }
         
         Divider()
