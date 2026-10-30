@@ -86,15 +86,19 @@ class ShuffleService: ObservableObject {
         
         do {
             let images = try context.fetch(descriptor)
-            guard let randomImage = images.randomElement(), let localPath = randomImage.localPath else {
+
+            // Hand the whole pool to WallpaperService: the display mode decides
+            // whether one image goes everywhere or each screen draws its own, and
+            // a single image here would defeat the per-display option entirely.
+            let urls = images.compactMap(\.localPath).map { URL(fileURLWithPath: $0) }
+            guard !urls.isEmpty else {
                 print("No images found to shuffle")
                 return
             }
-            
-            print("Shuffling to: \(localPath)")
-            let url = URL(fileURLWithPath: localPath)
-            try await WallpaperService.shared.setWallpaper(url: url)
-            
+
+            print("Shuffling from \(urls.count) images")
+            try await WallpaperService.shared.applyRandom(from: urls)
+
         } catch {
             print("Failed to shuffle wallpaper: \(error)")
         }

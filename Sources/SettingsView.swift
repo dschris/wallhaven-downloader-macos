@@ -3,6 +3,8 @@ import SwiftUI
 struct SettingsView: View {
     @AppStorage("wallhaven_api_key") private var apiKey: String = ""
     @AppStorage("download_path") private var downloadPath: String = "~/Pictures/Wallhaven"
+    @AppStorage(WallpaperSettingsKey.displayMode) private var displayMode: WallpaperDisplayMode = .sameAllDisplays
+    @AppStorage(WallpaperSettingsKey.spaceMode) private var spaceMode: WallpaperSpaceMode = .currentSpaceOnly
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -40,6 +42,41 @@ struct SettingsView: View {
                 } header: {
                     Label("Wallhaven API", systemImage: "key")
                 }
+
+                Section {
+                    Picker("Across displays", selection: $displayMode) {
+                        ForEach(WallpaperDisplayMode.allCases) { mode in
+                            Text(mode.title).tag(mode)
+                        }
+                    }
+                    .pickerStyle(.radioGroup)
+
+                    Text(displayMode.detail)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    Picker("Across Spaces", selection: $spaceMode) {
+                        ForEach(WallpaperSpaceMode.allCases) { mode in
+                            Text(mode.title).tag(mode)
+                        }
+                    }
+                    .pickerStyle(.radioGroup)
+                    .padding(.top, 8)
+
+                    Text(spaceMode.detail)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    Text("Changing either option takes effect at the next shuffle or Space switch. Picking a wallpaper from the grid still applies it to every display.")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, 4)
+                } header: {
+                    Label("Wallpaper Behaviour", systemImage: "display.2")
+                }
             }
             .formStyle(.grouped)
             
@@ -54,6 +91,6 @@ struct SettingsView: View {
             .padding()
             .background(.thinMaterial)
         }
-        .frame(width: 450, height: 400)
+        .frame(width: 460, height: 620)
     }
 }
